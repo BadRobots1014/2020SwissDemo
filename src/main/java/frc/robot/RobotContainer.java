@@ -10,10 +10,13 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.commands.DriveForTimeCommand;
 import frc.robot.commands.TankDriveCommand;
+import frc.robot.commands.DriveStraightCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -47,9 +50,12 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {    
+  private void configureButtonBindings() 
+  {    
     m_tankdrivecommand.setControllerSupplier(() -> m_driverController.getY(Hand.kLeft), () -> m_driverController.getY(Hand.kRight));
-    
+
+    // Stabilize robot to drive straight with gyro when left bumper is held
+    new JoystickButton(m_driverController, Button.kBumperLeft.value).whenHeld(new DriveStraightCommand(0.5, m_driveTrain.getHeading(), m_driveTrain));
   }
 
   private void configureDriveTrain() {
