@@ -9,8 +9,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import frc.robot.commands.DriveForTimeCommand;
 import frc.robot.commands.TankDriveCommand;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -21,18 +23,22 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DriveTrain m_drivetrain = new DriveTrain();
+  private final DriveTrainSubsystem m_driveTrain = new DriveTrainSubsystem();
 
-  private final TankDriveCommand m_tankdrivecommand = new TankDriveCommand(m_drivetrain);
+  private final TankDriveCommand m_tankdrivecommand = new TankDriveCommand(m_driveTrain);
 
+  private final DriveForTimeCommand m_autoDriveCommand = new DriveForTimeCommand(m_driveTrain, 5.0, 0.5);
 
+  private final XboxController m_driverController = new XboxController(Constants.PrimaryDriverController);
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    // Configure the button bindings
+
     configureButtonBindings();
+    // Configure the button bindings
+    configureDriveTrain();
   }
 
   /**
@@ -41,18 +47,22 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {
+  private void configureButtonBindings() {    
+    m_tankdrivecommand.setControllerSupplier(() -> m_driverController.getY(Hand.kLeft), () -> m_driverController.getY(Hand.kRight));
+    
   }
 
+  private void configureDriveTrain() {
+    m_driveTrain.setDefaultCommand(m_tankdrivecommand);
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
-  
-  public Command getDriveCommand() {
+  public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_tankdrivecommand;
+    return m_autoDriveCommand;
   }
 }

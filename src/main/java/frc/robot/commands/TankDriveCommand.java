@@ -7,9 +7,10 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.DriveTrain;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
+import frc.robot.subsystems.DriveTrainSubsystem;
+
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
@@ -17,19 +18,26 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
  */
 public class TankDriveCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final DriveTrain m_drivetrain;
+  private final DriveTrainSubsystem m_driveTrain;  
 
-  private final XboxController m_controller = new XboxController(0);
+  // Initialize these so that it is not empty.
+  private DoubleSupplier m_leftDoubleSupplier = () -> 0.0;
+  private DoubleSupplier m_rightDoubleSupplier = () -> 0.0;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public TankDriveCommand(DriveTrain subsystem) {
-    m_drivetrain = subsystem;
+  public TankDriveCommand(DriveTrainSubsystem subsystem) {
+    m_driveTrain = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
+  }
+
+  public void setControllerSupplier(DoubleSupplier leftDoubleSupplier, DoubleSupplier rightDoubleSupplier) {
+    m_leftDoubleSupplier = leftDoubleSupplier;
+    m_rightDoubleSupplier = rightDoubleSupplier;
   }
 
   // Called when the command is initially scheduled.
@@ -40,7 +48,7 @@ public class TankDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drivetrain.tankDrive(m_controller.getY(Hand.kLeft), m_controller.getY(Hand.kRight));
+    m_driveTrain.tankDrive(m_leftDoubleSupplier.getAsDouble(), m_rightDoubleSupplier.getAsDouble());//m_controller.getY(Hand.kLeft), m_controller.getY(Hand.kRight));
   }
 
   // Called once the command ends or is interrupted.

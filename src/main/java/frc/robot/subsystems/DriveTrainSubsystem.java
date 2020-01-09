@@ -12,15 +12,15 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class DriveTrain extends SubsystemBase {
+public class DriveTrainSubsystem extends SubsystemBase {
 
   // The motors on the left side of the drive.
   private final SpeedControllerGroup m_leftMotors = new SpeedControllerGroup(
-      new PWMTalonSRX(0), new PWMTalonSRX(2));
+      new PWMTalonSRX(0), new PWMTalonSRX(1));
 
   // The motors on the right side of the drive.
   private final SpeedControllerGroup m_rightMotors = new SpeedControllerGroup(
-      new PWMTalonSRX(1), new PWMTalonSRX(3));
+      new PWMTalonSRX(2), new PWMTalonSRX(3));
 
   // The robot's drive
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
@@ -28,13 +28,19 @@ public class DriveTrain extends SubsystemBase {
   /**
    * Creates a new ExampleSubsystem.
    */
-  public DriveTrain() {
+  public DriveTrainSubsystem() {
+    // Skyler is setup such that inversion is not necessary
+    m_drive.setRightSideInverted(false);
 
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed)
   {
-    m_drive.tankDrive(leftSpeed, rightSpeed);
+    m_drive.tankDrive(leftSpeed, rightSpeed);    
+  }
+
+  public void stop() {
+    m_drive.stopMotor();
   }
 
   @Override
