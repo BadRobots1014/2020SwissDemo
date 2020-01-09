@@ -36,7 +36,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
    */
   public DriveTrainSubsystem() {
     // Skyler is setup such that inversion is not necessary
-    m_drive.setRightSideInverted(false);
   }
 
   public double getHeading() {
