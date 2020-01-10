@@ -7,39 +7,32 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.PWMTalonSRX;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.SPI.Port;
+import frc.robot.Constants.DriveConstants;
 
 public class DriveTrainSubsystem extends SubsystemBase {
 
   // The motors on the left side of the drive.
   private final SpeedControllerGroup m_leftMotors = new SpeedControllerGroup(
-      new PWMTalonSRX(0), new PWMTalonSRX(1));
+      new PWMTalonSRX(DriveConstants.kLeftMotor1Port), new PWMTalonSRX(DriveConstants.kLeftMotor2Port));
 
   // The motors on the right side of the drive.
   private final SpeedControllerGroup m_rightMotors = new SpeedControllerGroup(
-      new PWMTalonSRX(2), new PWMTalonSRX(3));
+      new PWMTalonSRX(DriveConstants.kRightMotor1Port), new PWMTalonSRX(DriveConstants.kRightMotor2Port));
 
   // The robot's drive
-  private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
-
-  private final Gyro m_gyro = new ADXRS450_Gyro(Port.kMXP);
-
-
+  private final DifferentialDrive m_drive;
+  
   /**
    * Creates a new ExampleSubsystem.
    */
   public DriveTrainSubsystem() {
-    // Skyler is setup such that inversion is not necessary
-  }
-
-  public double getHeading() {
-    return m_gyro.getAngle();
+    m_leftMotors.setInverted(true);
+    m_rightMotors.setInverted(true);
+    m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed)
@@ -48,11 +41,20 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public void arcadeDrive(double speed, double angle) {
-    m_drive.arcadeDrive(speed, angle);
+    m_drive.arcadeDrive(speed, angle, false);
   }
 
   public void stop() {
     m_drive.stopMotor();
+  }
+
+    /**
+   * Sets the max output of the drive.  Useful for scaling the drive to drive more slowly.
+   *
+   * @param maxOutput the maximum output to which the drive will be constrained
+   */
+  public void setMaxOutput(double maxOutput) {
+    m_drive.setMaxOutput(maxOutput);
   }
 
   @Override

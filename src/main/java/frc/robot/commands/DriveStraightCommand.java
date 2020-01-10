@@ -7,9 +7,13 @@
 
 package frc.robot.commands;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.util.GyroProvider;
 
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -17,25 +21,35 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
 public class DriveStraightCommand extends PIDCommand {
   
+  //private final DoubleSupplier m_headingProvider;
   /**
    * Creates a new PIDDriveTrain.
    */
-  public DriveStraightCommand(double speed, double setPoint, DriveTrainSubsystem driveTrain) {
+  public DriveStraightCommand(DoubleSupplier speed, GyroProvider gyroProvider, DriveTrainSubsystem driveTrain) {    
     
     super(
         // The controller that the command will use
-        new PIDController(0, 0, 0),
+        new PIDController(DriveConstants.kStabilizationP, DriveConstants.kStabilizationI,
+        DriveConstants.kStabilizationD),
         // This should return the measurement
-        driveTrain::getHeading,
-        setPoint,
+        gyroProvider::getTurnRate,
+        0,
         // This should return the setpoint (can also be a constant)
         // This uses the output
-        outputAngle -> {
-          // Use the output here
-          driveTrain.arcadeDrive(speed, outputAngle);
-        });
+        outputTurnRate -> driveTrain.arcadeDrive(speed.getAsDouble(), outputTurnRate),
+        driveTrain);
     // Use addRequirements() here to declare subsystem dependencies.
+    //m_headingProvider = headingProvider;
+    //System.out.println("Drive Straight init");
+    //addRequirements(driveTrain);
     // Configure additional PID options by calling `getController` here.
+  }
+
+  @Override
+  public void initialize() {
+    //System.out.println("Initialize called:" + m_headingProvider.getAsDouble());
+    //getController().setSetpoint(m_headingProvider.getAsDouble());
+    
   }
 
 

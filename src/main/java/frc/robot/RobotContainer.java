@@ -11,10 +11,12 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DriveForTimeCommand;
 import frc.robot.commands.TankDriveCommand;
 import frc.robot.commands.DriveStraightCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.util.GyroProvider;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -27,17 +29,17 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrainSubsystem m_driveTrain = new DriveTrainSubsystem();
-
   private final TankDriveCommand m_tankdrivecommand = new TankDriveCommand(m_driveTrain);
+  private final DriveForTimeCommand m_autoDriveCommand = new DriveForTimeCommand(m_driveTrain, 1.0, 0.5);
+  private final XboxController m_driverController = new XboxController(OIConstants.kPrimaryDriverController);
 
-  private final DriveForTimeCommand m_autoDriveCommand = new DriveForTimeCommand(m_driveTrain, 5.0, 0.5);
-
-  private final XboxController m_driverController = new XboxController(Constants.PrimaryDriverController);
+  private final GyroProvider m_gyroProvider;
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    m_gyroProvider = new GyroProvider(Robot.isReal());
 
     configureButtonBindings();
     // Configure the button bindings
@@ -55,7 +57,11 @@ public class RobotContainer {
     m_tankdrivecommand.setControllerSupplier(() -> m_driverController.getY(Hand.kLeft), () -> m_driverController.getY(Hand.kRight));
 
     // Stabilize robot to drive straight with gyro when left bumper is held
-    new JoystickButton(m_driverController, Button.kBumperLeft.value).whenHeld(new DriveStraightCommand(0.5, m_driveTrain.getHeading(), m_driveTrain));
+    new JoystickButton(m_driverController, Button.kBumperLeft.value).whenHeld(new DriveStraightCommand(() -> 0.5, m_gyroProvider, m_driveTrain));
+
+    new JoystickButton(m_driverController, Button.kBumperRight.value)
+    .whenPressed(() -> m_driveTrain.setMaxOutput(0.5))
+    .whenReleased(() -> m_driveTrain.setMaxOutput(1));
   }
 
   private void configureDriveTrain() {
