@@ -36,7 +36,7 @@ public class DriveStraightCommand extends PIDCommand {
         0,
         // This should return the setpoint (can also be a constant)
         // This uses the output
-        outputTurnRate -> driveTrain.arcadeDrive(speed.getAsDouble(), outputTurnRate),
+        outputTurnRate -> driveTrain.directDrive(speed.getAsDouble(), outputTurnRate),
         driveTrain);
     // Use addRequirements() here to declare subsystem dependencies.
     //m_headingProvider = headingProvider;

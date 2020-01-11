@@ -30,8 +30,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
    * Creates a new ExampleSubsystem.
    */
   public DriveTrainSubsystem() {
-    m_leftMotors.setInverted(true);
-    m_rightMotors.setInverted(true);
     m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
   }
 
@@ -40,8 +38,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
     m_drive.tankDrive(leftSpeed, rightSpeed);    
   }
 
-  public void arcadeDrive(double speed, double angle) {
+  public void directDrive(double speed, double angle) {
     m_drive.arcadeDrive(speed, angle, false);
+  }
+
+  public void arcadeDrive(double speed, double angle) {
+    m_drive.arcadeDrive(speed, angle);
   }
 
   public void stop() {

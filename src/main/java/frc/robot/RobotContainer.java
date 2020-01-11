@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -54,10 +56,12 @@ public class RobotContainer {
    */
   private void configureButtonBindings() 
   {    
-    m_tankdrivecommand.setControllerSupplier(() -> m_driverController.getY(Hand.kLeft), () -> m_driverController.getY(Hand.kRight));
+    DoubleSupplier leftYJoystick = () -> -m_driverController.getY(Hand.kLeft);
+    DoubleSupplier rightJoystick = () -> -m_driverController.getY(Hand.kRight);
+    m_tankdrivecommand.setControllerSupplier(leftYJoystick, rightJoystick);
 
     // Stabilize robot to drive straight with gyro when left bumper is held
-    new JoystickButton(m_driverController, Button.kBumperLeft.value).whenHeld(new DriveStraightCommand(() -> 0.5, m_gyroProvider, m_driveTrain));
+    new JoystickButton(m_driverController, Button.kBumperLeft.value).whenHeld(new DriveStraightCommand(leftYJoystick, m_gyroProvider, m_driveTrain));
 
     new JoystickButton(m_driverController, Button.kBumperRight.value)
     .whenPressed(() -> m_driveTrain.setMaxOutput(0.5))

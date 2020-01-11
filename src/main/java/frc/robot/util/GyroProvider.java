@@ -9,8 +9,6 @@ package frc.robot.util;
 
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
-import java.util.function.DoubleSupplier;
-
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
@@ -21,12 +19,17 @@ import edu.wpi.first.wpilibj.SPI.Port;
  */
 public class GyroProvider {
     
-    private Gyro m_simGyro = new ADXRS450_Gyro(Port.kMXP);
-    private AHRS m_realGyro = new AHRS(Port.kMXP);
+    private Gyro m_simGyro;
+    private AHRS m_realGyro;
     private boolean m_isReal = false;
 
     public GyroProvider(final boolean isReal) {
         m_isReal = isReal;
+        if (isReal) {
+            m_realGyro = new AHRS(Port.kMXP);
+        } else {
+            m_simGyro = new ADXRS450_Gyro(Port.kMXP);
+        }
     }
 
     public double getHeading() {
