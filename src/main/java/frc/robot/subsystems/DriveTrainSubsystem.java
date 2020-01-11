@@ -7,24 +7,19 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
-import edu.wpi.first.wpilibj.PWMTalonSRX;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.util.TalonSRXProvider;
 
 public class DriveTrainSubsystem extends SubsystemBase {
 
   // The motors on the left side of the drive.
-  private final SpeedControllerGroup m_leftMotors = new SpeedControllerGroup(
-      new WPI_TalonSRX(DriveConstants.kLeftMotor1Port), new WPI_TalonSRX(DriveConstants.kLeftMotor2Port));
+  private final SpeedControllerGroup m_leftMotors;
 
   // The motors on the right side of the drive.
-  private final SpeedControllerGroup m_rightMotors = new SpeedControllerGroup(
-      new WPI_TalonSRX(DriveConstants.kRightMotor1Port), new WPI_TalonSRX(DriveConstants.kRightMotor2Port));
+  private final SpeedControllerGroup m_rightMotors;
 
   // The robot's drive
   private final DifferentialDrive m_drive;
@@ -32,7 +27,14 @@ public class DriveTrainSubsystem extends SubsystemBase {
   /**
    * Creates a new ExampleSubsystem.
    */
-  public DriveTrainSubsystem() {
+  public DriveTrainSubsystem(TalonSRXProvider speedControllerProvider) {
+    m_leftMotors = new SpeedControllerGroup(
+      speedControllerProvider.getSpeedController(DriveConstants.kLeftMotor1Port), 
+      speedControllerProvider.getSpeedController(DriveConstants.kLeftMotor2Port));
+    m_rightMotors = new SpeedControllerGroup(
+      speedControllerProvider.getSpeedController(DriveConstants.kRightMotor1Port), 
+      speedControllerProvider.getSpeedController(DriveConstants.kRightMotor2Port));
+  
     m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
   }
 

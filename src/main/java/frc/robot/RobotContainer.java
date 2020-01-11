@@ -19,6 +19,7 @@ import frc.robot.commands.TankDriveCommand;
 import frc.robot.commands.DriveStraightCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.util.GyroProvider;
+import frc.robot.util.TalonSRXProvider;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -30,18 +31,27 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DriveTrainSubsystem m_driveTrain = new DriveTrainSubsystem();
-  private final TankDriveCommand m_tankdrivecommand = new TankDriveCommand(m_driveTrain);
-  private final DriveForTimeCommand m_autoDriveCommand = new DriveForTimeCommand(m_driveTrain, 1.0, 0.5);
+  private final DriveTrainSubsystem m_driveTrain;
+  private final TankDriveCommand m_tankdrivecommand;
+  private final DriveForTimeCommand m_autoDriveCommand;
   private final XboxController m_driverController = new XboxController(OIConstants.kPrimaryDriverController);
 
   private final GyroProvider m_gyroProvider;
+  private final TalonSRXProvider m_speedControllerProvider;
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    m_gyroProvider = new GyroProvider(Robot.isReal());
+    boolean isReal = Robot.isReal();
+    m_gyroProvider = new GyroProvider(isReal);
+    m_speedControllerProvider = new TalonSRXProvider(isReal);
+    
+    // Pass in the speed controller provider to abstract the underlying speed controller type so this is more reusable
+    m_driveTrain = new DriveTrainSubsystem(m_speedControllerProvider);
+    m_tankdrivecommand = new TankDriveCommand(m_driveTrain);
+    // This is not currently useful, but does technically work.
+    m_autoDriveCommand = new DriveForTimeCommand(m_driveTrain, 1.0, 0.5);
 
     configureButtonBindings();
     // Configure the button bindings
