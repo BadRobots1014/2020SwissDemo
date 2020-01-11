@@ -7,6 +7,9 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import edu.wpi.first.wpilibj.PWMTalonSRX;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -17,11 +20,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   // The motors on the left side of the drive.
   private final SpeedControllerGroup m_leftMotors = new SpeedControllerGroup(
-      new PWMTalonSRX(DriveConstants.kLeftMotor1Port), new PWMTalonSRX(DriveConstants.kLeftMotor2Port));
+      new WPI_TalonSRX(DriveConstants.kLeftMotor1Port), new WPI_TalonSRX(DriveConstants.kLeftMotor2Port));
 
   // The motors on the right side of the drive.
   private final SpeedControllerGroup m_rightMotors = new SpeedControllerGroup(
-      new PWMTalonSRX(DriveConstants.kRightMotor1Port), new PWMTalonSRX(DriveConstants.kRightMotor2Port));
+      new WPI_TalonSRX(DriveConstants.kRightMotor1Port), new WPI_TalonSRX(DriveConstants.kRightMotor2Port));
 
   // The robot's drive
   private final DifferentialDrive m_drive;
