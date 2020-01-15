@@ -10,6 +10,7 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -43,6 +44,7 @@ public class DriveStraightCommand extends PIDCommand {
     //System.out.println("Drive Straight init");
     //addRequirements(driveTrain);
     // Configure additional PID options by calling `getController` here.
+    SmartDashboard.putData(getController());
   }
 
   @Override

@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 /**
  * An example command that uses an example subsystem.
  */
-public class TankDriveCommand extends CommandBase {
+public class TeleopDriveCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveTrainSubsystem m_driveTrain;  
 
@@ -29,7 +29,7 @@ public class TankDriveCommand extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public TankDriveCommand(DriveTrainSubsystem subsystem) {
+  public TeleopDriveCommand(DriveTrainSubsystem subsystem) {
     m_driveTrain = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
@@ -48,7 +48,7 @@ public class TankDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_driveTrain.tankDrive(m_leftDoubleSupplier.getAsDouble(), m_rightDoubleSupplier.getAsDouble());//m_controller.getY(Hand.kLeft), m_controller.getY(Hand.kRight));
+    m_driveTrain.arcadeDrive(m_leftDoubleSupplier.getAsDouble(), m_rightDoubleSupplier.getAsDouble());//m_controller.getY(Hand.kLeft), m_controller.getY(Hand.kRight));
   }
 
   // Called once the command ends or is interrupted.

@@ -26,8 +26,8 @@ public final class Constants {
         public static final int kLeftMotor1Port = 35;
         public static final int kLeftMotor2Port = 34;
 
-        public static final double kStabilizationP = 1;
-        public static final double kStabilizationI = 0.5;
+        public static final double kStabilizationP = .25;
+        public static final double kStabilizationI = 0.125;
         public static final double kStabilizationD = 0;
     }
 }
