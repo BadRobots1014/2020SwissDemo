@@ -82,8 +82,8 @@ public class RobotContainer {
     .whenReleased(() -> m_driveTrain.setMaxOutput(1));
 
     new JoystickButton(m_driverController, Button.kB.value)
-    .whenPressed(() -> m_climber.setDoubleSolenoid(true))
-    .whenReleased(() -> m_climber.setDoubleSolenoid(false));
+    .whenPressed(() -> m_climber.setSingleSolenoid(true))
+    .whenReleased(() -> m_climber.setSingleSolenoid(false));
   }
 
   private void configureDriveTrain() {
