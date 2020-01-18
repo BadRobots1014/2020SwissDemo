@@ -40,7 +40,7 @@ public class RobotContainer {
   private final GyroProvider m_gyroProvider;
   private final TalonSRXProvider m_speedControllerProvider;
 
-  //private final Climber m_climber;
+  private final Climber m_climber;
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -52,7 +52,7 @@ public class RobotContainer {
     
     // Pass in the speed controller provider to abstract the underlying speed controller type so this is more reusable
     m_driveTrain = new DriveTrainSubsystem(m_speedControllerProvider);
-    //m_climber = new Climber();
+    m_climber = new Climber();
     m_teleopdrivecommand = new TeleopDriveCommand(m_driveTrain);
     // This is not currently useful, but does technically work.
     m_autoDriveCommand = new DriveForTimeCommand(m_driveTrain, 1.0, 0.5);
@@ -81,11 +81,9 @@ public class RobotContainer {
     .whenPressed(() -> m_driveTrain.setMaxOutput(0.5))
     .whenReleased(() -> m_driveTrain.setMaxOutput(1));
 
-    // new JoystickButton(m_driverController, Button.kB.value)
-    // .whenPressed(() -> m_climber.setDoubleSolenoid(true));
-
-    // new JoystickButton(m_driverController, Button.kA.value)
-    // .whenPressed(() -> m_climber.setDoubleSolenoid(false));
+    new JoystickButton(m_driverController, Button.kB.value)
+    .whenPressed(() -> m_climber.setDoubleSolenoid(true))
+    .whenReleased(() -> m_climber.setDoubleSolenoid(false));
   }
 
   private void configureDriveTrain() {

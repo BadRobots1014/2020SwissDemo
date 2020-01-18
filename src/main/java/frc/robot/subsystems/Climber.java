@@ -8,14 +8,11 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.Relay.Direction;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climber extends SubsystemBase {
-  private final Solenoid m_solenoid = new Solenoid(0);
-  private final DoubleSolenoid m_doubleSolenoid = new DoubleSolenoid(1, 2);
+  private final DoubleSolenoid m_doubleSolenoid = new DoubleSolenoid(0, 1);
   /**
    * Creates a new Climber.
    */
@@ -23,9 +20,6 @@ public class Climber extends SubsystemBase {
 
   }
 
-  public void setSingleSolenoid(boolean climb) {
-    m_solenoid.set(climb);
-  }
 
   public void setDoubleSolenoid(boolean climb) {
     if (climb) {
