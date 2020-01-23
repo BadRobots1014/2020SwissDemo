@@ -19,6 +19,7 @@ import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.commands.DriveStraightCommand;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.UltrasonicSubsystem;
 import frc.robot.util.GyroProvider;
 import frc.robot.util.TalonSRXProvider;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -41,6 +42,7 @@ public class RobotContainer {
   private final TalonSRXProvider m_speedControllerProvider;
 
   private final Climber m_climber;
+  private final UltrasonicSubsystem m_ultrasonic;
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -53,6 +55,7 @@ public class RobotContainer {
     // Pass in the speed controller provider to abstract the underlying speed controller type so this is more reusable
     m_driveTrain = new DriveTrainSubsystem(m_speedControllerProvider);
     m_climber = new Climber();
+    m_ultrasonic = new UltrasonicSubsystem();
     m_teleopdrivecommand = new TeleopDriveCommand(m_driveTrain);
     // This is not currently useful, but does technically work.
     m_autoDriveCommand = new DriveForTimeCommand(m_driveTrain, 1.0, 0.5);
