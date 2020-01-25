@@ -24,6 +24,15 @@ public class UltrasonicSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Distance", m_ultrasonic.getValue()*toInches);
     }
 
+    public double getUltrasonicValue() 
+    {
+        return m_ultrasonic.getValue();
+    }
+
+    public double getDist_IN() 
+    {
+        return m_ultrasonic.getValue()*toInches;
+    }
 
     @Override
     public void periodic() {

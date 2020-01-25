@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climber extends SubsystemBase {
-  private final Solenoid m_solenoid = new Solenoid(0);
+  //private final Solenoid m_solenoid = new Solenoid(0);
   //private final DoubleSolenoid m_doubleSolenoid = new DoubleSolenoid(1, 2);
   /**
    * Creates a new Climber.
@@ -24,7 +24,7 @@ public class Climber extends SubsystemBase {
   }
 
   public void setSingleSolenoid(boolean climb) {
-    m_solenoid.set(climb);
+    //m_solenoid.set(climb);
   }
 
   /*public void setDoubleSolenoid(boolean climb) {

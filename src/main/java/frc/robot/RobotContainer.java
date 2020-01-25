@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.DriveForTimeCommand;
+import frc.robot.commands.DriveForDistCommand;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.commands.DriveStraightCommand;
 import frc.robot.subsystems.Climber;
@@ -35,7 +35,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrainSubsystem m_driveTrain;
   private final TeleopDriveCommand m_teleopdrivecommand;
-  private final DriveForTimeCommand m_autoDriveCommand;
+  private final DriveForDistCommand m_autoDriveCommand;
   private final XboxController m_driverController = new XboxController(OIConstants.kPrimaryDriverController);
 
   private final GyroProvider m_gyroProvider;
@@ -58,7 +58,7 @@ public class RobotContainer {
     m_ultrasonic = new UltrasonicSubsystem();
     m_teleopdrivecommand = new TeleopDriveCommand(m_driveTrain);
     // This is not currently useful, but does technically work.
-    m_autoDriveCommand = new DriveForTimeCommand(m_driveTrain, 1.0, 0.5);
+    m_autoDriveCommand = new DriveForDistCommand(m_driveTrain, m_ultrasonic, 12.0, 0.5);
 
     configureButtonBindings();
     // Configure the button bindings
