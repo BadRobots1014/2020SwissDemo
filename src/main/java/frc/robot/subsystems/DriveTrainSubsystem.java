@@ -7,8 +7,16 @@
 
 package frc.robot.subsystems;
 
+import java.util.Map;
+
+import edu.wpi.first.networktables.EntryListenerFlags;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.util.TalonSRXProvider;
@@ -23,7 +31,17 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
   // The robot's drive
   private final DifferentialDrive m_drive;
-  
+
+  private ShuffleboardTab m_shuffleboardDriveTab = Shuffleboard.getTab("Drive");
+
+  private SlewRateLimiter m_rateLimiter = new SlewRateLimiter(1.0);
+
+  private NetworkTableEntry m_slewRateLimit = m_shuffleboardDriveTab
+  .add("Slew Rate Limit", 1)
+  .withWidget(BuiltInWidgets.kNumberSlider)
+  .withProperties(Map.of("min", 0, "max", 5))
+  .getEntry();
+
   /**
    * Creates a new ExampleSubsystem.
    */
@@ -36,6 +54,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
       speedControllerProvider.getSpeedController(DriveConstants.kRightMotor2Port));
   
     m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
+
+    m_slewRateLimit.addListener(event -> {
+      m_rateLimiter.reset(event.value.getDouble());
+    }, EntryListenerFlags.kUpdate);
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed)
@@ -48,7 +70,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public void arcadeDrive(double speed, double angle) {
-    m_drive.arcadeDrive(speed, angle);
+    m_drive.arcadeDrive(m_rateLimiter.calculate(speed), angle);
   }
 
   public void stop() {
