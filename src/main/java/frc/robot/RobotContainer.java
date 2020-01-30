@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DriveForDistCommand;
 import frc.robot.commands.TeleopDriveCommand;
+import frc.robot.commands.TurnCommand;
 import frc.robot.commands.DriveStraightCommand;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -87,6 +88,9 @@ public class RobotContainer {
     new JoystickButton(m_driverController, Button.kB.value)
     .whenPressed(() -> m_climber.setSingleSolenoid(true))
     .whenReleased(() -> m_climber.setSingleSolenoid(false));
+
+    new JoystickButton(m_driverController, Button.kA.value)
+    .whenPressed(new TurnCommand(m_driveTrain, m_gyroProvider, 90, .5));
   }
 
   private void configureDriveTrain() {
