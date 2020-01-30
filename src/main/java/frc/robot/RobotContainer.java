@@ -90,7 +90,7 @@ public class RobotContainer {
     .whenReleased(() -> m_climber.setSingleSolenoid(false));
 
     new JoystickButton(m_driverController, Button.kA.value)
-    .whenPressed(new TurnCommand(m_driveTrain, m_gyroProvider));
+    .whenPressed(new TurnCommand(m_driveTrain, m_gyroProvider, 90, .5));
   }
 
   private void configureDriveTrain() {

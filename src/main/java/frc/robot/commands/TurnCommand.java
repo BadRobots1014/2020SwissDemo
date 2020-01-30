@@ -14,13 +14,17 @@ import frc.robot.util.GyroProvider;
 public class TurnCommand extends CommandBase {
     private final DriveTrainSubsystem m_driveTrain;
     private final GyroProvider m_gyro;
-    private double m_startHeading;
+    private double m_startHeading, m_endHeading;
+    private boolean m_deltaHeadingDirection; // true is clockwise
+    private final double m_angle, m_speed;
   /**
    * Creates a new TurnCommand.
    */
-  public TurnCommand(DriveTrainSubsystem driveTrain, GyroProvider gyro) {
+  public TurnCommand(DriveTrainSubsystem driveTrain, GyroProvider gyro, double angle, double speed) {
     m_driveTrain = driveTrain;
     m_gyro = gyro;
+    m_angle = angle;
+    m_speed = speed;
 
     addRequirements(driveTrain);
   }
@@ -28,16 +32,28 @@ public class TurnCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println(m_gyro.getHeading());
     m_startHeading = m_gyro.getHeading();
+    m_endHeading = m_gyro.getHeading() + m_angle;
+    if ((m_endHeading - m_startHeading) >= 0) {
+        m_deltaHeadingDirection = true;
+    } else {
+        m_deltaHeadingDirection = false;
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_gyro.getHeading() < (m_startHeading + 90)) {
-        m_driveTrain.tankDrive(1.0, -1.0);
+    if (m_deltaHeadingDirection) {
+        if (m_gyro.getHeading() < m_endHeading) {
+            m_driveTrain.tankDrive(m_speed, -m_speed);
+        }
+    } else {
+        if (m_gyro.getHeading() > m_endHeading) {
+            m_driveTrain.tankDrive(-m_speed, m_speed);
+        }
     }
+
   }
 
   // Called once the command ends or is interrupted.
@@ -48,10 +64,18 @@ public class TurnCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_gyro.getHeading() >= (m_startHeading + 90)) {
-        return true;
+    if (m_deltaHeadingDirection) {
+        if (m_gyro.getHeading() >= (m_endHeading)) {
+            return true;
+        } else {
+            return false;
+        }
     } else {
-        return false;
+        if (m_gyro.getHeading() <= (m_endHeading)) {
+            return true;
+        } else {
+            return false;
+        }
     }
   }
 }
